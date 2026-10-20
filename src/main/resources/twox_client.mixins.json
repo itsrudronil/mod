@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.rudronil.twox.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "OptionInstanceAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
