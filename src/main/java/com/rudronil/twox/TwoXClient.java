@@ -1,8 +1,12 @@
 package com.rudronil.twox;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.rudronil.twox.module.CombatTracker;
+import com.rudronil.twox.module.CpsTracker;
 import com.rudronil.twox.module.ModuleManager;
+import com.rudronil.twox.module.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -20,10 +24,8 @@ public class TwoXClient implements ClientModInitializer {
     public static final String AUTHOR = "Its Rudronil";
     public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
-    private static KeyMapping openMenuKey;
-    private static KeyMapping zoomKey;
-    private static boolean zooming = false;
-    private static int savedFov = 70;
+    public static KeyMapping openMenuKey;
+    public static KeyMapping zoomKey;
 
     @Override
     public void onInitializeClient() {
@@ -35,35 +37,43 @@ public class TwoXClient implements ClientModInitializer {
         zoomKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.twox_client.zoom", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, category));
 
-        ModuleManager.init();
+        CombatTracker.init();
+        WaypointModule.registerCommands();
+
+        // Modules are created once the game has finished starting (options must be loaded).
+        ClientLifecycleEvents.CLIENT_STARTED.register(mc -> ModuleManager.init());
+        ClientLifecycleEvents.CLIENT_STOPPING.register(mc -> ModuleManager.shutdown());
 
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-            while (openMenuKey.consumeClick()) mc.setScreen(new ModMenuScreen());
+            while (openMenuKey.consumeClick()) mc.setScreen(new ClickGuiScreen());
             ModuleManager.tick();
-            handleZoom(mc);
         });
 
+        // Custom crosshair / hide scoreboard / hide boss bar wrap the vanilla elements
+        HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, original -> (g, tick) -> {
+            if (ModuleManager.crosshair != null && ModuleManager.crosshair.isEnabled()) {
+                ModuleManager.crosshair.draw(g);
+            } else {
+                original.render(g, tick);
+            }
+        });
+        HudElementRegistry.replaceElement(VanillaHudElements.SCOREBOARD, original -> (g, tick) -> {
+            if (ModuleManager.hideScoreboard == null || !ModuleManager.hideScoreboard.isEnabled()) original.render(g, tick);
+        });
+        HudElementRegistry.replaceElement(VanillaHudElements.BOSS_BAR, original -> (g, tick) -> {
+            if (ModuleManager.hideBossBar == null || !ModuleManager.hideBossBar.isEnabled()) original.render(g, tick);
+        });
+
+        // Main 2X HUD layer
         HudElementRegistry.attachElementAfter(
                 VanillaHudElements.MISC_OVERLAYS,
                 Identifier.fromNamespaceAndPath(MOD_ID, "hud"),
-                (graphics, tickCounter) -> {
+                (g, tick) -> {
                     Minecraft mc = Minecraft.getInstance();
+                    CpsTracker.update();
                     if (mc.options.hideGui) return;
-                    graphics.drawString(mc.font, NAME, 4, 4, 0xFF55FFFF, true);
-                    ModuleManager.renderHud(graphics);
+                    g.drawString(mc.font, NAME.toUpperCase(), 4, 4, 0xFF55FFFF, true);
+                    ModuleManager.renderHud(g);
                 });
-    }
-
-    /** Hold the zoom key to zoom in (FOV 30); release to restore. */
-    private static void handleZoom(Minecraft mc) {
-        if (mc.screen != null) return;
-        if (zoomKey.isDown() && !zooming) {
-            savedFov = mc.options.fov().get();
-            mc.options.fov().set(30);
-            zooming = true;
-        } else if (!zoomKey.isDown() && zooming) {
-            mc.options.fov().set(savedFov);
-            zooming = false;
-        }
     }
 }

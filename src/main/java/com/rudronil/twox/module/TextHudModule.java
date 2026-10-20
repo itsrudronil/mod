@@ -1,25 +1,24 @@
 package com.rudronil.twox.module;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.function.Supplier;
 
-/** A HUD module that just shows one line of text. */
+/** HUD module that shows text from a supplier. Use \n for multiple lines. Return null to hide. */
 public class TextHudModule extends Module {
     private final Supplier<String> text;
 
-    public TextHudModule(String name, Supplier<String> text) {
-        super(name, true);
+    public TextHudModule(String name, Category cat, Anchor anchor, boolean def, Supplier<String> text) {
+        super(name, cat, anchor, def);
         this.text = text;
     }
 
     @Override
     public int renderHud(GuiGraphics g, int x, int y) {
-        Minecraft mc = Minecraft.getInstance();
         String s = text.get();
-        if (s == null) return 0;
-        g.drawString(mc.font, s, x, y, 0xFFFFFFFF, true);
-        return 12;
+        if (s == null || s.isEmpty()) return 0;
+        int used = 0;
+        for (String l : s.split("\n")) used += line(g, l, x, y + used, 0xFFFFFFFF);
+        return used + 2;
     }
 }

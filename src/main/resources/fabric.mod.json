@@ -4,16 +4,23 @@
   "version": "${version}",
   "name": "2X Client",
   "description": "2X Client - a client-side Fabric mod for Minecraft 1.21.11.",
-  "authors": ["Its Rudronil"],
+  "authors": [
+    "Its Rudronil"
+  ],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
-    "client": ["com.rudronil.twox.TwoXClient"]
+    "client": [
+      "com.rudronil.twox.TwoXClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.18.1",
     "minecraft": "~1.21.11",
     "java": ">=21",
     "fabric-api": "*"
-  }
+  },
+  "mixins": [
+    "twox_client.mixins.json"
+  ]
 }
