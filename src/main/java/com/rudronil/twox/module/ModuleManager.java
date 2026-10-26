@@ -32,6 +32,8 @@ public class ModuleManager {
     public static CrosshairModule crosshair;
     public static Module hideScoreboard;
     public static Module hideBossBar;
+    public static Module nametagIcon;
+    public static Module iconTestMode;
 
     private static final String[] COMPASS = {"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
 
@@ -112,6 +114,10 @@ public class ModuleManager {
         hideBossBar = new Module("Hide Boss Bar", Category.VISUAL, Anchor.NONE, false) {};
         add(hideScoreboard);
         add(hideBossBar);
+        nametagIcon = new Module("Nametag Icon", Category.VISUAL, Anchor.NONE, true) {};
+        iconTestMode = new Module("Icon Test Mode", Category.VISUAL, Anchor.NONE, false) {};
+        add(nametagIcon);
+        add(iconTestMode);
 
         // ---- Utility ----
         add(new ToggleSprintModule());

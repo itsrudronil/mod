@@ -3,7 +3,8 @@
   "package": "com.rudronil.twox.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "OptionInstanceAccessor"
+    "OptionInstanceAccessor",
+    "EntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
