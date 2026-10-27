@@ -2,13 +2,13 @@ package com.rudronil.twox.module;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class KeystrokesModule extends Module {
     public KeystrokesModule() { super("Keystrokes", Category.HUD, Anchor.FIXED, true); }
 
     @Override
-    public int renderHud(GuiGraphics g, int originX, int originY) {
+    public int renderHud(GuiGraphicsExtractor g, int originX, int originY) {
         Minecraft mc = Minecraft.getInstance();
         int s = 22, gap = 2;
         int x0 = originX, y0 = originY;
@@ -29,17 +29,17 @@ public class KeystrokesModule extends Module {
         return 0;
     }
 
-    private void key(GuiGraphics g, Minecraft mc, int x, int y, int w, int h, String label, KeyMapping k) {
+    private void key(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int w, int h, String label, KeyMapping k) {
         boolean d = k.isDown();
         g.fill(x, y, x + w, y + h, d ? 0xB0FFFFFF : 0x80000000);
-        g.drawCenteredString(mc.font, label, x + w / 2, y + (h - 8) / 2, d ? 0xFF000000 : 0xFFFFFFFF);
+        g.centeredText(mc.font, label, x + w / 2, y + (h - 8) / 2, d ? 0xFF000000 : 0xFFFFFFFF);
     }
 
-    private void mouse(GuiGraphics g, Minecraft mc, int x, int y, int w, String label, int cps, KeyMapping k) {
+    private void mouse(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int w, String label, int cps, KeyMapping k) {
         boolean d = k.isDown();
         int fg = d ? 0xFF000000 : 0xFFFFFFFF;
         g.fill(x, y, x + w, y + 22, d ? 0xB0FFFFFF : 0x80000000);
-        g.drawCenteredString(mc.font, label, x + w / 2, y + 3, fg);
-        g.drawCenteredString(mc.font, cps + " CPS", x + w / 2, y + 12, fg);
+        g.centeredText(mc.font, label, x + w / 2, y + 3, fg);
+        g.centeredText(mc.font, cps + " CPS", x + w / 2, y + 12, fg);
     }
 }

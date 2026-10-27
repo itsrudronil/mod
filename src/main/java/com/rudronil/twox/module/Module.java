@@ -2,7 +2,7 @@ package com.rudronil.twox.module;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public abstract class Module {
     public enum Category {
@@ -50,7 +50,7 @@ public abstract class Module {
     public void onTick() {}
 
     /** Draw HUD content. Returns the height used (LEFT/RIGHT stacking). */
-    public int renderHud(GuiGraphics g, int x, int y) { return 0; }
+    public int renderHud(GuiGraphicsExtractor g, int x, int y) { return 0; }
 
     public void resetBounds() { hasBounds = false; }
     public boolean hasBounds() { return hasBounds; }
@@ -71,15 +71,15 @@ public abstract class Module {
     }
 
     /** Grey label shown in the HUD editor when the module has nothing to display right now. */
-    public void placeholder(GuiGraphics g, int x, int y) {
+    public void placeholder(GuiGraphicsExtractor g, int x, int y) {
         line(g, "[" + name + "]", x, y, 0xFF777777);
     }
 
     /** Draws one line, right-aligned automatically for RIGHT anchored modules. */
-    protected int line(GuiGraphics g, String text, int x, int y, int color) {
+    protected int line(GuiGraphicsExtractor g, String text, int x, int y, int color) {
         Font f = Minecraft.getInstance().font;
         int dx = anchor == Anchor.RIGHT ? x - f.width(text) : x;
-        g.drawString(f, text, dx, y, color, true);
+        g.text(f, text, dx, y, color, true);
         track(dx - 1, y - 1, dx + f.width(text) + 1, y + 9);
         return 11;
     }

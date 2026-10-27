@@ -4,7 +4,7 @@ import com.rudronil.twox.module.Module;
 import com.rudronil.twox.module.Module.Category;
 import com.rudronil.twox.module.ModuleManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -62,16 +62,16 @@ public class ClickGuiScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float delta) {
-        super.renderBackground(g, mouseX, mouseY, delta);
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
+        super.extractBackground(g, mouseX, mouseY, delta);
         g.fill(px, py, px + W, py + H, 0xE00F0F18);                // panel
         g.fill(px, py, px + W, py + 28, 0xFF1B2A41);               // header
         g.fill(px, py + 28, px + W, py + 30, 0xFF55FFFF);          // accent line
         g.fill(px, py + 30, px + 96, py + H, 0xFF14141E);          // sidebar
-        g.drawString(this.font, "2X CLIENT", px + 10, py + 10, 0xFF55FFFF, true);
+        g.text(this.font, "2X CLIENT", px + 10, py + 10, 0xFF55FFFF, true);
         String by = "by " + TwoXClient.AUTHOR;
-        g.drawString(this.font, by, px + W - 10 - this.font.width(by), py + 10, 0xFFAAAAAA, true);
-        g.drawString(this.font, selected.label, px + 100, py + 33 - 1, 0xFF888888, false);
+        g.text(this.font, by, px + W - 10 - this.font.width(by), py + 10, 0xFFAAAAAA, true);
+        g.text(this.font, selected.label, px + 100, py + 33 - 1, 0xFF888888, false);
     }
 
     @Override

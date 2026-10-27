@@ -2,7 +2,7 @@ package com.rudronil.twox;
 
 import com.rudronil.twox.module.Module;
 import com.rudronil.twox.module.ModuleManager;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -31,7 +31,7 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float delta) {
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
         // No blur here so the HUD stays sharp while editing
         g.fill(0, 0, this.width, this.height, 0x90000000);
         ModuleManager.renderHud(g, true);
@@ -45,10 +45,10 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float delta) {
-        super.render(g, mouseX, mouseY, delta);
-        g.drawCenteredString(this.font, "Drag HUD elements to move them", this.width / 2, 10, 0xFF55FFFF);
-        g.drawCenteredString(this.font, "Only enabled modules can be moved. Grey [names] are modules with nothing to show yet.",
+    public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(g, mouseX, mouseY, delta);
+        g.centeredText(this.font, "Drag HUD elements to move them", this.width / 2, 10, 0xFF55FFFF);
+        g.centeredText(this.font, "Only enabled modules can be moved. Grey [names] are modules with nothing to show yet.",
                 this.width / 2, 22, 0xFFAAAAAA);
     }
 
@@ -56,7 +56,7 @@ public class HudEditorScreen extends Screen {
         return mx >= m.boundsX0() && mx <= m.boundsX1() && my >= m.boundsY0() && my <= m.boundsY1();
     }
 
-    private static void outline(GuiGraphics g, int x0, int y0, int x1, int y1, int c) {
+    private static void outline(GuiGraphicsExtractor g, int x0, int y0, int x1, int y1, int c) {
         g.fill(x0, y0, x1, y0 + 1, c);
         g.fill(x0, y1 - 1, x1, y1, c);
         g.fill(x0, y0, x0 + 1, y1, c);

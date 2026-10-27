@@ -1,6 +1,6 @@
 package com.rudronil.twox.module;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.function.Supplier;
 
@@ -14,7 +14,7 @@ public class TextHudModule extends Module {
     }
 
     @Override
-    public int renderHud(GuiGraphics g, int x, int y) {
+    public int renderHud(GuiGraphicsExtractor g, int x, int y) {
         String s = text.get();
         if (s == null || s.isEmpty()) return 0;
         int used = 0;

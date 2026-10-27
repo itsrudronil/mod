@@ -8,7 +8,7 @@ import com.rudronil.twox.module.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
@@ -32,9 +32,9 @@ public class TwoXClient implements ClientModInitializer {
         LOGGER.info("{} by {} loaded!", NAME, AUTHOR);
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "main"));
-        openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.twox_client.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, category));
-        zoomKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        zoomKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.twox_client.zoom", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, category));
 
         CombatTracker.init();
@@ -54,14 +54,14 @@ public class TwoXClient implements ClientModInitializer {
             if (ModuleManager.crosshair != null && ModuleManager.crosshair.isEnabled()) {
                 ModuleManager.crosshair.draw(g);
             } else {
-                original.render(g, tick);
+                original.extractRenderState(g, tick);
             }
         });
         HudElementRegistry.replaceElement(VanillaHudElements.SCOREBOARD, original -> (g, tick) -> {
-            if (ModuleManager.hideScoreboard == null || !ModuleManager.hideScoreboard.isEnabled()) original.render(g, tick);
+            if (ModuleManager.hideScoreboard == null || !ModuleManager.hideScoreboard.isEnabled()) original.extractRenderState(g, tick);
         });
         HudElementRegistry.replaceElement(VanillaHudElements.BOSS_BAR, original -> (g, tick) -> {
-            if (ModuleManager.hideBossBar == null || !ModuleManager.hideBossBar.isEnabled()) original.render(g, tick);
+            if (ModuleManager.hideBossBar == null || !ModuleManager.hideBossBar.isEnabled()) original.extractRenderState(g, tick);
         });
 
         // Main 2X HUD layer
@@ -72,7 +72,7 @@ public class TwoXClient implements ClientModInitializer {
                     Minecraft mc = Minecraft.getInstance();
                     CpsTracker.update();
                     if (mc.options.hideGui || mc.screen instanceof HudEditorScreen) return;
-                    g.drawString(mc.font, NAME.toUpperCase(), 4, 4, 0xFF55FFFF, true);
+                    g.text(mc.font, NAME.toUpperCase(), 4, 4, 0xFF55FFFF, true);
                     ModuleManager.renderHud(g, false);
                 });
     }
