@@ -7,7 +7,7 @@ import com.rudronil.twox.module.Module.Anchor;
 import com.rudronil.twox.module.Module.Category;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -122,6 +122,7 @@ public class ModuleManager {
         // ---- Utility ----
         add(new ToggleSprintModule());
         add(new WaypointModule());
+        add(new FpsBoostModule());
 
         load();
     }
@@ -141,7 +142,7 @@ public class ModuleManager {
         for (Module m : MODULES) if (m.isEnabled()) m.onTick();
     }
 
-    public static void renderHud(GuiGraphicsExtractor g, boolean editing) {
+    public static void renderHud(GuiGraphics g, boolean editing) {
         int leftY = 16, rightY = 4;
         for (Module m : MODULES) {
             if (!m.isEnabled() || m.getAnchor() == Anchor.NONE) continue;

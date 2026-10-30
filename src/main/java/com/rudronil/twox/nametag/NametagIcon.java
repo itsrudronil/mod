@@ -24,11 +24,10 @@ public final class NametagIcon {
     /** Returns the same component if no icon applies, otherwise "[icon] name". */
     public static Component apply(Entity entity, Component name) {
         if (!(entity instanceof Player player)) return name;
-        if (name.getString().startsWith(ICON_CHAR)) return name; // already added by the other hook
 
         boolean moduleOn = ModuleManager.nametagIcon != null && ModuleManager.nametagIcon.isEnabled();
         boolean test = ModuleManager.iconTestMode != null && ModuleManager.iconTestMode.isEnabled();
-        boolean user = TwoXUsers.isUser(player.getUUID());
+        boolean user = moduleOn && TwoXUsers.isUser(player.getUUID());
 
         // A few lines in logs/latest.log to help find out why an icon is (not) shown
         if (logged < 6) {
@@ -37,7 +36,9 @@ public final class NametagIcon {
                     player.getName().getString(), moduleOn, test, user);
         }
 
+        // Cheap checks first: most players are not 2X users, so they cost almost nothing per frame.
         if (!moduleOn || (!test && !user)) return name;
+        if (name.getString().startsWith(ICON_CHAR)) return name; // already added by the other hook
 
         MutableComponent icon = Component.literal(ICON_CHAR).setStyle(ICON_STYLE);
         return Component.empty().append(icon).append(Component.literal(" ")).append(name);
