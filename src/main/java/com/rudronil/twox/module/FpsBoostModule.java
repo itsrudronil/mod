@@ -3,7 +3,7 @@ package com.rudronil.twox.module;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.ParticleStatus;
+import net.minecraft.server.level.ParticleStatus;
 
 /**
  * Applies a few cheap-to-render settings while enabled and puts your own values back

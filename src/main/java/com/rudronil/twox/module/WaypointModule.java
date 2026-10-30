@@ -5,11 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.rudronil.twox.TwoXClient;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -42,10 +42,10 @@ public class WaypointModule extends Module {
 
     public static void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-                dispatcher.register(ClientCommands.literal("2x")
-                        .then(ClientCommands.literal("wp")
-                                .then(ClientCommands.literal("add")
-                                        .then(ClientCommands.argument("name", StringArgumentType.word())
+                dispatcher.register(ClientCommandManager.literal("2x")
+                        .then(ClientCommandManager.literal("wp")
+                                .then(ClientCommandManager.literal("add")
+                                        .then(ClientCommandManager.argument("name", StringArgumentType.word())
                                                 .executes(ctx -> {
                                                     String n = StringArgumentType.getString(ctx, "name");
                                                     Minecraft mc = Minecraft.getInstance();
@@ -62,8 +62,8 @@ public class WaypointModule extends Module {
                                                     ctx.getSource().sendFeedback(Component.literal("Waypoint '" + n + "' added."));
                                                     return 1;
                                                 })))
-                                .then(ClientCommands.literal("remove")
-                                        .then(ClientCommands.argument("name", StringArgumentType.word())
+                                .then(ClientCommandManager.literal("remove")
+                                        .then(ClientCommandManager.argument("name", StringArgumentType.word())
                                                 .executes(ctx -> {
                                                     String n = StringArgumentType.getString(ctx, "name");
                                                     boolean removed = LIST.removeIf(o -> o.name.equalsIgnoreCase(n));
@@ -72,7 +72,7 @@ public class WaypointModule extends Module {
                                                             removed ? "Waypoint '" + n + "' removed." : "No waypoint named '" + n + "'."));
                                                     return 1;
                                                 })))
-                                .then(ClientCommands.literal("list")
+                                .then(ClientCommandManager.literal("list")
                                         .executes(ctx -> {
                                             if (LIST.isEmpty()) {
                                                 ctx.getSource().sendFeedback(Component.literal("No waypoints."));
@@ -86,7 +86,7 @@ public class WaypointModule extends Module {
     }
 
     @Override
-    public int renderHud(GuiGraphicsExtractor g, int x, int y) {
+    public int renderHud(GuiGraphics g, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return 0;
         String dim = mc.level.dimension().toString();

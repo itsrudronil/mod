@@ -1,7 +1,7 @@
 package com.rudronil.twox.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,7 +14,7 @@ public class ArmorHudModule extends Module {
     public ArmorHudModule() { super("Armor Status", Category.HUD, Anchor.LEFT, true); }
 
     @Override
-    public int renderHud(GuiGraphicsExtractor g, int x, int y) {
+    public int renderHud(GuiGraphics g, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return 0;
         int cx = x;
@@ -22,8 +22,8 @@ public class ArmorHudModule extends Module {
         for (EquipmentSlot slot : SLOTS) {
             ItemStack stack = mc.player.getItemBySlot(slot);
             if (stack.isEmpty()) continue;
-            g.item(stack, cx, y);
-            g.itemDecorations(mc.font, stack, cx, y);
+            g.renderItem(stack, cx, y);
+            g.renderItemDecorations(mc.font, stack, cx, y);
             cx += 18;
             any = true;
         }

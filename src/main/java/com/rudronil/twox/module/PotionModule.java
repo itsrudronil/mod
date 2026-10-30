@@ -1,14 +1,14 @@
 package com.rudronil.twox.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffectInstance;
 
 public class PotionModule extends Module {
     public PotionModule() { super("Potion Status", Category.HUD, Anchor.RIGHT, true); }
 
     @Override
-    public int renderHud(GuiGraphicsExtractor g, int x, int y) {
+    public int renderHud(GuiGraphics g, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return 0;
         int used = 0;

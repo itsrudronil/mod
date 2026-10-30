@@ -1,6 +1,6 @@
 package com.rudronil.twox.module;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class CrosshairModule extends Module {
     private static final int COLOR = 0xFF55FFFF;
@@ -8,7 +8,7 @@ public class CrosshairModule extends Module {
     public CrosshairModule() { super("Custom Crosshair", Category.VISUAL, Anchor.NONE, true); }
 
     /** Draws a small gapped cross with a centre dot. */
-    public void draw(GuiGraphicsExtractor g) {
+    public void draw(GuiGraphics g) {
         int cx = g.guiWidth() / 2;
         int cy = g.guiHeight() / 2;
         int gap = 3, len = 5;
